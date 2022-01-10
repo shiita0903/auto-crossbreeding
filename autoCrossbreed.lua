@@ -70,7 +70,7 @@ end
 
 local function isWeed(crop)
     return crop.name == "weed" or 
-        crop.name == "grass" or
+        crop.name == "Grass" or
         crop.gr > 21 or 
         (crop.name == "venomilia" and crop.gr > 7);
 end
