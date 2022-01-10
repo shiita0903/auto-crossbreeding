@@ -31,6 +31,9 @@ local config = {
     stickSlot = -2,
     -- to which slot should the robot stop storing items
     storageStopSlot = -3,
+    -- Max breed round before termination. Used on server to avoid left-alone robot endlessly
+    -- consuming resources. Set to nil for infinite loop.
+    maxBreedRound = 1000,
 
     -- flags
 
