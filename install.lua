@@ -27,20 +27,22 @@ else
 end
 
 if branch == "help" then
-    print("Usage:\n./install or ./install [branch] [updateconfig]")
+    print("Usage:\n./install or ./install [branch] [updateconfig] [repository]")
     return
 end
 
-if #args == 2 then
+if args[2] ~= nil then
     option = args[2]
 end
 
+local repo = args[3] or "https://raw.githubusercontent.com/chenleihu/auto-crossbreeding/";
+
 for i=1, #scripts do
-    shell.execute("wget -f https://raw.githubusercontent.com/xyqyear/auto-crossbreeding/"..branch.."/"..scripts[i])
+    shell.execute(string.format("wget -f %s%s/%s", repo, branch, scripts[i]));
 end
 
 if not exists("config.lua") then
-    shell.execute("wget https://raw.githubusercontent.com/xyqyear/auto-crossbreeding/"..branch.."/config.lua")
+    shell.execute(string.format("wget %s%s/config.lua", repo, branch));
 end
 
 if option == "updateconfig" then
@@ -51,5 +53,5 @@ if option == "updateconfig" then
         shell.execute("mv config.lua config.bak")
         print("Moved config.lua to config.bak")
     end
-    shell.execute("wget https://raw.githubusercontent.com/xyqyear/auto-crossbreeding/"..branch.."/config.lua")
+    shell.execute(string.format("wget %s%s/config.lua", repo, branch));
 end
