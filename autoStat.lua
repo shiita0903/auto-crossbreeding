@@ -61,10 +61,17 @@ local function findSuitableFarmSlot(crop)
     end
 end
 
+local function isWeed(crop)
+    return crop.name == "weed" or 
+        crop.name == "Grass" or
+        crop.gr > 21 or 
+        (crop.name == "venomilia" and crop.gr > 7);
+end
+
 local function breedOnce()
     -- return true if all stats are maxed out
     -- 52 = 21(max gr) + 31(max ga) - 0 (min re)
-    if not nonstop and lowestStat == 52 then
+    if not nonstop and lowestStat == 50 then
         return true
     end
 
@@ -76,8 +83,7 @@ local function breedOnce()
         elseif (not config.assumeNoBareStick) and crop.name == "crop" then
             action.placeCropStick()
         elseif crop.isCrop then
-            if crop.name == "weed" or crop.gr > 21 or
-              (crop.name == "venomilia" and crop.gr > 7) then
+            if isWeed(crop) then
                 action.deweed()
                 action.placeCropStick()
             elseif crop.name == database.getFarm()[1].name then
