@@ -68,6 +68,44 @@ local function isWeed(crop)
         (crop.name == "venomilia" and crop.gr > 7);
 end
 
+local function checkOffspring(slot, crop)
+    if crop.name == "air" then
+        action.placeCropStick(2)
+    elseif (not config.assumeNoBareStick) and crop.name == "crop" then
+        action.placeCropStick()
+    elseif crop.isCrop then
+        if isWeed(crop) then
+            action.deweed()
+            action.placeCropStick()
+        elseif crop.name == database.getFarm()[1].name then
+            local suitableSlot = findSuitableFarmSlot(crop)
+            if suitableSlot == 0 then
+                action.deweed()
+                action.placeCropStick()
+            else
+                action.transplant(posUtil.farmToGlobal(slot), posUtil.farmToGlobal(suitableSlot))
+                action.placeCropStick(2)
+                database.updateFarm(suitableSlot, crop)
+                updateLowest()
+            end
+        elseif config.keepNewCropWhileMinMaxing and (not database.existInStorage(crop)) then
+            action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()))
+            action.placeCropStick(2)
+            database.addToStorage(crop)
+        else
+            action.deweed()
+            action.placeCropStick()
+        end
+    end
+end
+
+local function checkParent(slot, crop)
+    if crop.isCrop and isWeed(crop) then
+        action.deweed();
+        database.updateFarm(slot, nil);
+    end
+end
+
 local function breedOnce()
     -- return true if all stats are maxed out
     -- 52 = 21(max gr) + 31(max ga) - 0 (min re)
@@ -75,37 +113,16 @@ local function breedOnce()
         return true
     end
 
-    for slot=2, config.farmSize^2, 2 do
+    for slot=1, config.farmArea, 1 do
         gps.go(posUtil.farmToGlobal(slot))
         local crop = scanner.scan()
-        if crop.name == "air" then
-            action.placeCropStick(2)
-        elseif (not config.assumeNoBareStick) and crop.name == "crop" then
-            action.placeCropStick()
-        elseif crop.isCrop then
-            if isWeed(crop) then
-                action.deweed()
-                action.placeCropStick()
-            elseif crop.name == database.getFarm()[1].name then
-                local suitableSlot = findSuitableFarmSlot(crop)
-                if suitableSlot == 0 then
-                    action.deweed()
-                    action.placeCropStick()
-                else
-                    action.transplant(posUtil.farmToGlobal(slot), posUtil.farmToGlobal(suitableSlot))
-                    action.placeCropStick(2)
-                    database.updateFarm(suitableSlot, crop)
-                    updateLowest()
-                end
-            elseif config.keepNewCropWhileMinMaxing and (not database.existInStorage(crop)) then
-                action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()))
-                action.placeCropStick(2)
-                database.addToStorage(crop)
-            else
-                action.deweed()
-                action.placeCropStick()
-            end
+
+        if (slot % 2 == 0) then
+            checkOffspring(slot, crop);
+        else
+            checkParent(slot, crop);
         end
+        
         if action.needCharge() then
             action.charge()
         end
