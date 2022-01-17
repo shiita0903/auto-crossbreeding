@@ -41,7 +41,7 @@ local config = {
     -- from destroying crops, harvesting crops, destroying sticks, etc
     -- if you are using this scrip set to do everything, there isn't realy any point to use this.
     -- this option and the option below isn't actively maintained because I don't use this function.
-    takeCareOfDrops = false,
+    takeCareOfDrops = true,
 
     -- if you turn on this flag, you need to prepare a storage farm
     -- the recommend size is 13, which you change above.
