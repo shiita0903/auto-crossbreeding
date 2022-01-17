@@ -16,10 +16,9 @@ if #args == 1 then
     end
 end
 
-local lowestStat
-local lowestStatSlot
-local nearestReplacableDistance
-local nearestReplacableSlot
+local lowestStat;
+local lowestStatSlot;
+local workingCrop;
 
 local function updateLowest()
     lowestStat = 64
@@ -41,25 +40,10 @@ local function updateLowest()
             end
         end
     end
-
-    nearestReplacableSlot = 0
-    nearestReplacableDistance = config.farmArea * 2
-    for slot=1, config.farmArea, 2 do
-        local crop = farm[slot]
-        if crop ~= nil and crop.name ~= workingCropName then
-            local pos = posUtil.farmToGlobal(slot)
-            if (pos[1] + pos[2]) < nearestReplacableDistance then
-                nearestReplacableDistance = pos[1] + pos[2]
-                nearestReplacableSlot = slot
-            end
-        end
-    end
 end
 
 local function findSuitableFarmSlot(crop)
-    if nearestReplacableSlot ~= 0 then
-        return nearestReplacableSlot
-    elseif crop.gr+crop.ga-crop.re > lowestStat then
+    if crop.gr+crop.ga-crop.re > lowestStat then
         return lowestStatSlot
     else
         return 0
@@ -82,7 +66,7 @@ local function checkOffspring(slot, crop)
         if isWeed(crop) then
             action.deweed()
             action.placeCropStick()
-        elseif crop.name == database.getFarm()[1].name then
+        elseif crop.name == workingCrop then
             local suitableSlot = findSuitableFarmSlot(crop)
             if suitableSlot == 0 then
                 action.deweed()
@@ -108,6 +92,7 @@ local function checkParent(slot, crop)
     if crop.isCrop and isWeed(crop) then
         action.deweed();
         database.updateFarm(slot, {name='crop'});
+        updateLowest();
     end
 end
 
@@ -140,6 +125,9 @@ local function init()
     if config.keepNewCropWhileMinMaxing then
         database.scanStorage()
     end
+
+    workingCrop = database.getFarm()[1].name;
+
     updateLowest()
     action.restockAll()
 end
