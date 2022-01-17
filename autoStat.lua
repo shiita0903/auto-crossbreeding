@@ -29,10 +29,15 @@ local function updateLowest()
     for slot=1, config.farmArea, 2 do
         local crop = farm[slot]
         if crop ~= nil then
-            local stat = crop.gr+crop.ga-crop.re
-            if stat < lowestStat then
-                lowestStat = stat
+            if crop.name == 'crop' then
                 lowestStatSlot = slot
+                break;
+            else
+                local stat = crop.gr+crop.ga-crop.re
+                if stat < lowestStat then
+                    lowestStat = stat
+                    lowestStatSlot = slot
+                end
             end
         end
     end
@@ -102,7 +107,7 @@ end
 local function checkParent(slot, crop)
     if crop.isCrop and isWeed(crop) then
         action.deweed();
-        database.updateFarm(slot, nil);
+        database.updateFarm(slot, {name='crop'});
     end
 end
 
