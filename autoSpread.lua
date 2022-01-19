@@ -23,8 +23,7 @@ local args = {...}
     the parent plants, and 10% chance to be a new type of crop.
  ]]
 
- local parentCrop;
- local targetCrop;
+  local targetCrop;
  -- The min stats requirement for target crop to be put into storage farm.
  local targetCropMinStats = 46;
  -- Current stats of target crop in the breeding cell.
@@ -89,23 +88,12 @@ end
 
  local function spreadOnce()
     for slot=1, config.farmArea, 1 do
-        local farmPos = posUtil.farmToGlobal(slot);
-        local breedingCellPos = {
-            farmPos[1] % 3,
-            farmPos[2] % 3,
-        };
-
-        local isChildren = 
-            posEquals(breedingCellPos, {1, 2}) or 
-            posEquals(breedingCellPos, {2, 1}) or 
-            posEquals(breedingCellPos, {0, 2}) or 
-            posEquals(breedingCellPos, {2, 0});
-
+        local farmPos = posUtil.farmToGlobal(slot);    
         gps.go(farmPos);
         local crop = scanner.scan();
 
-        if isChildren then
-            checkChildren(crop);
+        if slot % 2 == 0 then
+            checkChildren(slot, crop);
         end
                 
         if action.needCharge() then
@@ -120,7 +108,14 @@ end
 end
 
 local function init()
-    action.restockAll()
+    gps.save();
+
+    gps.go(posUtil.farmToGlobal(TARGETCROP_SLOT));
+    targetCrop = scanner.scan().name;
+    print(string.format('Target crop recognized: %s.', targetCrop));
+
+    action.restockAll();
+    gps.resume();
 end
 
 local function main()
