@@ -112,10 +112,6 @@ end
             action.charge()
         end
 
-        if config.takeCareOfDrops then
-            action.dumpInventory()
-        end
-
         if #database.getStorage() >= 81 then
             return true;
         end
@@ -137,9 +133,6 @@ local function main()
     if #args == 1 and args[1] == "docleanup" then
         action.destroyAll()
         gps.go({0,0})
-    end
-    if config.takeCareOfDrops then
-        action.dumpInventory()
     end
     gps.turnTo(1)
     print("Done.\nThe Farm is filled up.")
