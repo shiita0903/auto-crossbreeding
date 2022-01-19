@@ -49,7 +49,7 @@ end
         return;
     end
 
-    if ~crop.isCrop then
+    if not crop.isCrop then
         return;
     end
 
@@ -61,14 +61,14 @@ end
 
     if crop.name == targetCrop then
         -- Populate breeding cells with high stats crop as priority.
-        if calculateStats(crop) >= targetCropCurrentStats then
+        if targetCropCurrentStats <= targetCropMinStats and calculateStats(crop) > targetCropCurrentStats then
             action.transplant(posUtil.farmToGlobal(slot), posUtil.farmToGlobal(TARGETCROP_SLOT));
             targetCropCurrentStats = calculateStats(crop);
             return;
         end
         
         if calculateStats(crop) >= targetCropMinStats then
-            action.transplant(posUtil.farmToGlobal(slot), database.nextStorageSlot());
+            action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()));
             action.placeCropStick(2);
             return;
         end
