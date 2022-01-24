@@ -41,22 +41,24 @@ local args = {...}
  local BreedingCell = {};
  function BreedingCell.new(center)
     local cell = {
-        stats = nil,
+        center=center,
+        stats=nil,
     };
 
     function cell.slots() 
         local slots = {};
         for dx = -1, 1 do
             for dy = -1, 1 do
-                table.insert(slots, posUtil.posToSlot({center[1] + dx, center[2] + dy}));
+                table.insert(slots, posUtil.globalToFarm({center[1] + dx, center[2] + dy}));
             end
         end
         return slots;
     end
 
     function cell.isChildren(slot)
-        local pos = posUtil.slotToPos(slot);
-        return math.abs(pos[1]) + math.abs(pos[2]) == 1;
+        local pos = posUtil.farmToGlobal(slot);
+        local c = cell.center;
+        return math.abs(c[1] - pos[1]) + math.abs(c[2] - pos[2]) == 1;
     end
 
     function cell.isActive()
@@ -85,7 +87,7 @@ local args = {...}
  end
 
  local CropQueue = {};
- local function CropQueue.new(slotToStatMapping)
+ function CropQueue.new(slotToStatMapping)
     local q = {
         stats=slotToStatMapping,
     };
@@ -101,7 +103,7 @@ local args = {...}
 
     function q.updateLowest()
         q.lowestStat = 64;
-        for slot, stat in pairs(p.stats) do
+        for slot, stat in pairs(q.stats) do
             if stat < q.lowestStat then
                 q.lowestStat = stat;
                 q.lowestStatSlot = slot;
@@ -121,7 +123,7 @@ local args = {...}
         return false;
     end
 
-    updateLowest();
+    q.updateLowest();
     return q;
  end
 
@@ -207,7 +209,7 @@ local function init()
 
     local stats = {};
     for i, cell in ipairs(breedingCells) do
-        local pos = breedingCellMap[i].center;
+        local pos = cell.center;
         local slot = posUtil.globalToFarm(pos);
 
         gps.go(pos);
