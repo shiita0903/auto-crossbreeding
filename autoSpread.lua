@@ -1,4 +1,4 @@
--- Set farmSize=3, and storageFarmSize=9 to use this script.
+-- Set farmSize=6, and storageFarmSize=9 in config.lua to use this script.
 
 local database = require("database")
 local gps = require("gps")
@@ -21,15 +21,111 @@ local args = {...}
     
     According to IC2 breeding rule, The offspring of 2 plants have 45% chance to be either
     the parent plants, and 10% chance to be a new type of crop.
+   Y-axis
+   5 [6,  7, 18, ...]
+   4 [5,  8, 17, ...]
+   3 [4,  9, 16, ...]
+   2 [3, 10, 15, ...]
+   1 [2, 11, 14, ...]
+   0 [1, 12, 13, ...]
+      1   2   3  ...  X-axis
  ]]
 
-  local targetCrop;
+ local targetCrop;
  -- The min stats requirement for target crop to be put into storage farm.
- local targetCropMinStats = 46;
- -- Current stats of target crop in the breeding cell.
- local targetCropCurrentStats = 0;
- 
- local TARGETCROP_SLOT = 5;
+  local targetCropStatsThreshold = 45;
+ -- Current lowest stats of target crop in the breeding cell.
+ local targetCropLowestStats;
+ local targetCropLowestStatsSlot;
+
+ local BreedingCell = {};
+ function BreedingCell.new(center)
+    local cell = {
+        stats = nil,
+    };
+
+    function cell.slots() 
+        local slots = {};
+        for dx = -1, 1 do
+            for dy = -1, 1 do
+                table.insert(slots, posUtil.posToSlot({center[1] + dx, center[2] + dy}));
+            end
+        end
+        return slots;
+    end
+
+    function cell.isChildren(slot)
+        local pos = posUtil.slotToPos(slot);
+        return math.abs(pos[1]) + math.abs(pos[2]) == 1;
+    end
+
+    function cell.isActive()
+        return stats == nil;
+    end
+
+    return cell;
+ end
+
+ -- Mapping from slot# to breeding cell.
+ local breedingCellMap = {};
+ local breedingCells = {};
+
+ for x=1, config.farmSize // 3 do
+    for y=1, config.farmSize // 3 do
+        -- for 6x6 farm, y = 1, 4; x = 2, 5
+        local centerX = 3 * (x - 1) + 2;
+        local centerY = 3 * (y - 1) + 1;
+        local cell = BreedingCell.new({centerX, centerY});
+        
+        for _, slot in ipairs(cell.slots()) do
+            breedingCellMap[slot] = cell;
+        end
+        table.insert(breedingCells, cell);
+    end
+ end
+
+ local CropQueue = {};
+ local function CropQueue.new(slotToStatMapping)
+    local q = {
+        stats=slotToStatMapping,
+    };
+    
+    function q.updateStatsAtSlot(slot, stat)
+        if q.lowestStat > stat then
+            q.lowestStat = stat;
+            q.lowestStatSlot = slot;
+        end
+
+        q.stats[slot] = stat;
+    end
+
+    function q.updateLowest()
+        q.lowestStat = 64;
+        for slot, stat in pairs(p.stats) do
+            if stat < q.lowestStat then
+                q.lowestStat = stat;
+                q.lowestStatSlot = slot;
+            end
+        end
+    end
+
+    --[[ Try replace lowest stat slot in the queue with incoming pair.
+    Returns true if the replacement is successful. ]]
+    function q.replaceLowest(slot, stat)
+        if stat > q.lowestStat then
+            action.transplant(posUtil.farmToGlobal(slot), posUtil.farmToGlobal(q.lowestStatSlot));
+            q.stats[q.lowestStatSlot] = stat;
+            q.updateLowest();
+            return true;
+        end
+        return false;
+    end
+
+    updateLowest();
+    return q;
+ end
+
+local targetCropQueue;
 
 local function isWeed(crop)
     return crop.name == "weed" or 
@@ -60,14 +156,15 @@ end
     end
 
     if crop.name == targetCrop then
+        local stat = calculateStats(crop);
         -- Populate breeding cells with high stats crop as priority.
-        if targetCropCurrentStats <= targetCropMinStats and calculateStats(crop) > targetCropCurrentStats then
-            action.transplant(posUtil.farmToGlobal(slot), posUtil.farmToGlobal(TARGETCROP_SLOT));
-            targetCropCurrentStats = calculateStats(crop);
-            return;
+        if targetCropQueue.lowestStat < targetCropMinStats then
+            if targetCropQueue.replaceLowest(slot, stat) then
+                return;
+            end
         end
         
-        if calculateStats(crop) >= targetCropMinStats then
+        if stat >= targetCropMinStats then
             action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()));
             action.placeCropStick(2);
             return;
@@ -82,37 +179,48 @@ end
     return crop.gr + crop.ga - crop.re;
  end
 
- local function posEquals(p1, p2)
-    return (p1[1] == p2[1]) and (p1[2] == p2[2]);
- end
-
  local function spreadOnce()
     for slot=1, config.farmArea, 1 do
         local farmPos = posUtil.farmToGlobal(slot);    
         gps.go(farmPos);
         local crop = scanner.scan();
 
-        if slot % 2 == 0 then
+        local cell = breedingCellMap[slot];
+        if cell.isChildren(slot) then
             checkChildren(slot, crop);
-        end
-                
-        if action.needCharge() then
-            action.charge()
         end
 
         if #database.getStorage() >= 81 then
             return true;
         end
+
+        if action.needCharge() then
+            action.charge()
+        end
     end
+
     return false
 end
 
 local function init()
     gps.save();
 
-    gps.go(posUtil.farmToGlobal(TARGETCROP_SLOT));
-    targetCrop = scanner.scan().name;
-    print(string.format('Target crop recognized: %s.', targetCrop));
+    local stats = {};
+    for i, cell in ipairs(breedingCells) do
+        local pos = breedingCellMap[i].center;
+        local slot = posUtil.globalToFarm(pos);
+
+        gps.go(pos);
+        local crop = scanner.scan();
+        stats[slot] = calculateStats(crop);
+
+        if i == 1 then
+            targetCrop = crop.name;
+            print(string.format('Target crop recognized: %s.', targetCrop));
+        end
+    end
+
+    targetCropQueue = CropQueue.new(stats);
 
     action.restockAll();
     gps.resume();

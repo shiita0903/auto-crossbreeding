@@ -3,10 +3,10 @@ local config = {
 
     -- the side length of the crossbreeding farm
     -- the recommend value is 9 because it's crop-matron's working area size.
-    farmSize = 9,
+    farmSize = 6,
     -- the side length of the new crop storage farm
     -- the recommend value is 13 because it's just enough to hold all the crops in GTNH
-    storageFarmSize = 13, -- don't change
+    storageFarmSize = 9, -- don't change
 
     -- below which percentage should the robot to charge itself.
     needChargeLevel = 0.2,
