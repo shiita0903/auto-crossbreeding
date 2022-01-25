@@ -168,6 +168,7 @@ end
         
         if stat >= targetCropStatsThreshold then
             action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()));
+            database.addToStorage(crop);
             action.placeCropStick(2);
             return;
         end
