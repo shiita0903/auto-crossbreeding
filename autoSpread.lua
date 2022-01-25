@@ -160,13 +160,13 @@ end
     if crop.name == targetCrop then
         local stat = calculateStats(crop);
         -- Populate breeding cells with high stats crop as priority.
-        if targetCropQueue.lowestStat < targetCropMinStats then
+        if targetCropQueue.lowestStat < targetCropStatsThreshold then
             if targetCropQueue.replaceLowest(slot, stat) then
                 return;
             end
         end
         
-        if stat >= targetCropMinStats then
+        if stat >= targetCropStatsThreshold then
             action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()));
             action.placeCropStick(2);
             return;
