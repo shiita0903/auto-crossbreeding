@@ -205,6 +205,21 @@ end
     return false
 end
 
+local function cleanup()
+    for slot=1, config.farmArea, 1 do
+        local farmPos = posUtil.farmToGlobal(slot);    
+        gps.go(farmPos);
+        local cell = breedingCellMap[slot];
+        if cell.isChildren(slot) then
+            robot.swingDown();
+
+            if config.takeCareOfDrops then
+                robot.suckDown();
+            end
+        end
+    end
+end
+
 local function init()
     gps.save();
 
@@ -237,8 +252,8 @@ local function main()
     end
     gps.go({0,0})
     if #args == 1 and args[1] == "docleanup" then
-        action.destroyAll()
-        gps.go({0,0})
+        cleanup();
+        gps.go({0,0});
     end
     gps.turnTo(1)
     print("Done.\nThe Farm is filled up.")

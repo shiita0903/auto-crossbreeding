@@ -31,14 +31,12 @@ local function farmToGlobal(farmSlot)
 end
 
 local function globalToStorage(globalPos)
-    -- Note: offset the storage farm field by 1 to avoid weed spreading from 
-    -- main breeding field.
-    return posToSlot(config.storageFarmSize, {-globalPos[1] - 1, globalPos[2]})
+    return posToSlot(config.storageFarmSize, {-globalPos[1], globalPos[2]})
 end
 
 local function storageToGlobal(storageSlot)
     local globalPos = slotToPos(config.storageFarmSize, storageSlot)
-    globalPos[1] = -globalPos[1] - 1;
+    globalPos[1] = -globalPos[1];
     return globalPos
 end
 
