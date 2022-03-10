@@ -35,8 +35,8 @@ Setup for min-maxing:
 The setup is pretty much the same except you don't need the 13*13 farmland on the left
 
 Setup for spreading:
-
-\[WIP\]
+The script is completely re-written in this forked repository.
+The usage guide can be found on [GTNH wiki](https://gtnh.miraheze.org/wiki/Open_Computers_Crop_Breeding).
 
 ## Config
 
