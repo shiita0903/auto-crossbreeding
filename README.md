@@ -44,7 +44,7 @@ Explanation in config.lua
 
 ## To Install
 
-    wget https://raw.githubusercontent.com/xyqyear/auto-crossbreeding/main/install.lua
+    wget https://raw.githubusercontent.com/chenleihu/auto-crossbreeding/main/install.lua
     ./install
 
 If you run ./install after the installation, it will update all the files except for config.lua
@@ -55,7 +55,7 @@ If you want to update config.lua also, you can run:
 
 If you want to install dev branch, you can run:
 
-    ./install dev
+    ./install improve_autocrossbreed
 
 ## To Run
 
