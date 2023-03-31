@@ -232,6 +232,7 @@ return {
     needCharge = needCharge,
     charge = charge,
     restockStick = restockStick,
+    dumpInventory = dumpInventory,
     restockAll = restockAll,
     placeCropStick = placeCropStick,
     deweed = deweed,
