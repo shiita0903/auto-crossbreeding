@@ -47,23 +47,6 @@ local config = {
     bestStatWhileSpreading = true,
     -- assume there is no bare stick in the farm, should increace speed.
     assumeNoBareStick = true,
-    -----------Do Not Change Zone------------
-
-    multifarmCentorOffset = { -3, 4 },
-    multifarmDislocatorPoses = {
-        { 2,  0 },
-        { 0,  -2 },
-        { -2, 0 },
-        { 0,  2 }
-    },
-    multifarmRelayFarmlandPoses = {
-        { 3,  0 },
-        { 0,  -3 },
-        { -3, 0 },
-        { 0,  3 }
-    },
-    multifarmSize = 20,
-    elevatorPos = { 0, 4 }
 }
 
 config.farmArea = config.farmSize ^ 2

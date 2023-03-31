@@ -34,9 +34,6 @@ local args = { ... }
 local targetCrop;
 -- The min stats requirement for target crop to be put into storage farm.
 local targetCropStatsThreshold = 45;
--- Current lowest stats of target crop in the breeding cell.
-local targetCropLowestStats;
-local targetCropLowestStatsSlot;
 
 local BreedingCell = {};
 function BreedingCell.new(center)

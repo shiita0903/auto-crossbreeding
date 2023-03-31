@@ -24,7 +24,6 @@ local function updateLowest()
     lowestStat = 64
     lowestStatSlot = 0
     local farm = database.getFarm()
-    local workingCropName = database.getFarm()[1].name
     for slot = 1, config.farmArea, 2 do
         local crop = farm[slot]
         if crop ~= nil then

@@ -164,60 +164,6 @@ local function transplant(src, dest)
     robot.select(selectedSlot)
 end
 
-local function transplantToMultifarm(src, dest)
-    local globalDest = posUtil.multifarmPosToGlobalPos(dest)
-    local optimalDislocatorSet = posUtil.findOptimalDislocator(dest)
-    local dislocatorPos = optimalDislocatorSet[1]
-    local relayFarmlandPos = optimalDislocatorSet[2]
-
-    local selectedSlot = robot.select()
-    gps.save()
-
-    if robot.count(robot.inventorySize() + config.stickSlot) < 2 then
-        restockStick()
-    end
-
-    robot.select(robot.inventorySize() + config.binderSlot)
-    inventory_controller.equip()
-
-    -- transfer the crop to the relay location
-    gps.go(config.elevatorPos)
-    gps.down(3)
-    gps.go(dislocatorPos)
-    robot.useDown(sides.down)
-
-    gps.go(config.elevatorPos)
-    gps.up(3)
-    gps.go(src)
-    robot.useDown(sides.down, true) -- sneak-right-click on crops to prevent harvesting
-
-    gps.go(config.elevatorPos)
-    gps.down(3)
-    gps.go(dislocatorPos)
-    signal.pulseDown()
-
-    if not (relayFarmlandPos[1] == globalDest[1] and relayFarmlandPos[2] == globalDest[2]) then
-        -- transfer the crop to the destination
-        robot.useDown(sides.down)
-        gps.go(globalDest)
-        placeCropStick()
-        robot.useDown(sides.down, true)
-        gps.go(dislocatorPos)
-        signal.pulseDown()
-
-        -- destroy the original crop
-        gps.go(relayFarmlandPos)
-        robot.swingDown()
-    end
-
-    gps.go(config.elevatorPos)
-    gps.up(3)
-
-    inventory_controller.equip()
-    gps.resume()
-    robot.select(selectedSlot)
-end
-
 local function destroyAll()
     for slot = 2, config.farmArea, 2 do
         gps.go(posUtil.farmToGlobal(slot))
@@ -231,12 +177,10 @@ end
 return {
     needCharge = needCharge,
     charge = charge,
-    restockStick = restockStick,
     dumpInventory = dumpInventory,
     restockAll = restockAll,
     placeCropStick = placeCropStick,
     deweed = deweed,
     transplant = transplant,
-    transplantToMultifarm = transplantToMultifarm,
-    destroyAll = destroyAll
+    destroyAll = destroyAll,
 }

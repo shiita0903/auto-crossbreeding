@@ -29,9 +29,6 @@ but the number increases from left to right. Like this:
 local storage = {}
 local reverseStorage = {} -- for a faster lookup of already existing crops
 local farm = {}           -- odd slots only
--- the center of this pos is the center of the multifarm.
--- you can find functions in posUtil to translate it to global pos.
-local lastMultifarmPos = { 0, 0 }
 
 local function getStorage()
     return storage
@@ -39,14 +36,6 @@ end
 
 local function getFarm()
     return farm
-end
-
-local function getLastMultifarmPos()
-    return lastMultifarmPos
-end
-
-local function setLastMultifarmPos(pos)
-    lastMultifarmPos = pos
 end
 
 local function scanFarm()
@@ -91,67 +80,6 @@ local function updateFarm(slot, crop)
     farm[slot] = crop
 end
 
-local function nextMultifarmPos()
-    local x = lastMultifarmPos[1]
-    local y = lastMultifarmPos[2]
-
-    if posUtil.multifarmPosIsRelayFarmland(lastMultifarmPos) then
-        return posUtil.nextRelayFarmland(lastMultifarmPos)
-    end
-
-    local d = math.abs(x) + math.abs(y)
-    local nextPossiblePos
-
-    if x == 0 and y == 0 then
-        nextPossiblePos = { 0, 4 }
-    elseif x == -1 and y == d - 1 then
-        if d == config.multifarmSize then
-            return posUtil.nextRelayFarmland()
-        else
-            nextPossiblePos = { 0, d + 1 }
-        end
-    elseif x >= 0 and y > 0 then
-        nextPossiblePos = { x + 1, y - 1 }
-    elseif x > 0 and y <= 0 then
-        nextPossiblePos = { x - 1, y - 1 }
-    elseif x <= 0 and y < 0 then
-        nextPossiblePos = { x - 1, y + 1 }
-    elseif x < 0 and y >= 0 then
-        nextPossiblePos = { x + 1, y + 1 }
-    end
-
-    if posUtil.multifarmPosIsRelayFarmland(nextPossiblePos) or not posUtil.multifarmPosInFarm(nextPossiblePos) then
-        lastMultifarmPos = nextPossiblePos
-        return nextMultifarmPos()
-    else
-        return nextPossiblePos
-    end
-end
-
-local function updateMultifarm(pos)
-    lastMultifarmPos = pos
-end
-
-local function scanMultifarm()
-    gps.save()
-    gps.go(config.elevatorPos)
-    gps.down(3)
-    while true do
-        local nextPos = nextMultifarmPos()
-        local nextGlobalPos = posUtil.multifarmPosToGlobalPos(nextPos)
-        gps.go(nextGlobalPos)
-        local cropInfo = scanner.scan()
-        if cropInfo.name == "air" then
-            break
-        else
-            updateMultifarm(nextPos)
-        end
-    end
-    gps.go(config.elevatorPos)
-    gps.up(3)
-    gps.resume()
-end
-
 local function existInStorage(crop)
     -- I know I can simply write "return reverseStorage[crop.name]"
     -- But I want the api have a clean return value (alway bool)
@@ -169,15 +97,10 @@ end
 return {
     getStorage = getStorage,
     getFarm = getFarm,
-    getLastMultifarmPos = getLastMultifarmPos,
-    setLastMultifarmPos = setLastMultifarmPos,
     scanFarm = scanFarm,
     scanStorage = scanStorage,
-    scanMultifarm = scanMultifarm,
     existInStorage = existInStorage,
     nextStorageSlot = nextStorageSlot,
     addToStorage = addToStorage,
     updateFarm = updateFarm,
-    nextMultifarmPos = nextMultifarmPos,
-    updateMultifarm = updateMultifarm
 }

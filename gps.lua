@@ -4,14 +4,6 @@ local nowFacing = 1
 local nowPos = { 0, 0 }
 local savedPos = {}
 
-local function getFacing()
-    return nowFacing
-end
-
-local function getPos()
-    return nowPos
-end
-
 local function safeForward()
     local forwardSuccess
     repeat
@@ -109,8 +101,6 @@ local function resume()
 end
 
 return {
-    getFacing = getFacing,
-    getPos = getPos,
     turnTo = turnTo,
     go = go,
     save = save,
