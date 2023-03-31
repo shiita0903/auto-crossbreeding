@@ -2,7 +2,7 @@ local config = {
     -- be aware that each config should be followed by a comma
 
     -- the side length of the crossbreeding farm
-    -- the recommend value is 9 because it's crop-matron's working area size.
+    -- maximum value is 9.
     farmSize = 6,
     -- the side length of the new crop storage farm
     -- the recommend value is 13 because it's just enough to hold all the crops in GTNH
@@ -12,14 +12,14 @@ local config = {
     -- the coordinate for charger
     chargerPos = { 0, 0 },
     -- the coordinate for the container contains crop sticks
-    stickContainerPos = { 0, 1 },
-    -- the coordinate for the farmland that the dislocaotr is facing
-    relayFarmlandPos = { 0, 2 },
-    -- the coordinate for the transvector dislocator
-    dislocatorPos = { 0, 3 },
+    stickContainerPos = { 0, 3 },
     -- the coordinate for the container to store seeds, products, etc
     -- has no effect unless you turn on "takeCareOfDrops" flag.
-    storagePos = { 0, 5 },
+    storagePos = { 0, 2 },
+    -- the coordinate for the transvector dislocator
+    dislocatorPos = { 0, 5 },
+    -- the coordinate for the farmland that the dislocaotr is facing
+    relayFarmlandPos = { 0, 6 },
     -- the slot for spade, count from 0, count from bottom-right to top-left
     spadeSlot = 0,
     -- the slot for binder for the transvector dislocator
@@ -30,7 +30,9 @@ local config = {
     storageStopSlot = -3,
     -- Max breed round before termination. Used on server to avoid left-alone robot endlessly
     -- consuming resources. Set to nil for infinite loop.
-    maxBreedRound = 1000,
+    maxBreedRound = nil,
+    -- The min stats requirement for target crop to be put into storage farm.
+    autoSpreadTargetCropStatsThreshold = 52,
     -- flags
 
     -- if you turn on this flag, the robot will try to take care of the item drops
@@ -41,10 +43,6 @@ local config = {
     -- if you turn on this flag, you need to prepare a storage farm
     -- the recommend size is 13, which you change above.
     keepNewCropWhileMinMaxing = false,
-    -- if you turn on this flag, the robot will only choose the crop with
-    -- gr > 21, < 24, ga == 31, re == 0 to spread.
-    -- helpful while debuging.
-    bestStatWhileSpreading = true,
     -- assume there is no bare stick in the farm, should increace speed.
     assumeNoBareStick = true,
 }

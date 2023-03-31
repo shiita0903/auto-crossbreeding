@@ -32,8 +32,6 @@ local args = { ... }
       1   2   3  ...  X-axis
  ]]
 local targetCrop;
--- The min stats requirement for target crop to be put into storage farm.
-local targetCropStatsThreshold = 45;
 
 local BreedingCell = {};
 function BreedingCell.new(center)
@@ -157,13 +155,13 @@ local function checkChildren(slot, crop)
     if crop.name == targetCrop then
         local stat = calculateStats(crop);
         -- Populate breeding cells with high stats crop as priority.
-        if targetCropQueue.lowestStat < targetCropStatsThreshold then
+        if targetCropQueue.lowestStat < config.autoSpreadTargetCropStatsThreshold then
             if targetCropQueue.replaceLowest(slot, stat) then
                 return;
             end
         end
 
-        if stat >= targetCropStatsThreshold then
+        if stat >= config.autoSpreadTargetCropStatsThreshold then
             action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()));
             database.addToStorage(crop);
             action.placeCropStick(2);
