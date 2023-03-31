@@ -7,11 +7,8 @@ local config = require("config")
 
 local args = { ... }
 local nonstop = false
-local docleanup = false
 if #args == 1 then
-    if args[1] == "docleanup" then
-        docleanup = true
-    elseif args[1] == "nonstop" then
+    if args[1] == "nonstop" then
         nonstop = true
     end
 end
@@ -138,10 +135,8 @@ local function main()
         action.restockAll()
     end
     gps.go({ 0, 0 })
-    if docleanup then
-        action.destroyAll()
-        gps.go({ 0, 0 })
-    end
+    action.destroyAll()
+    gps.go({ 0, 0 })
     if config.takeCareOfDrops then
         action.dumpInventory()
     end

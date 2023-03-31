@@ -248,10 +248,8 @@ local function main()
         action.restockAll()
     end
     gps.go({ 0, 0 })
-    if #args == 1 and args[1] == "docleanup" then
-        cleanup();
-        gps.go({ 0, 0 });
-    end
+    cleanup();
+    gps.go({ 0, 0 });
     gps.turnTo(1)
     print("Done.\nThe Farm is filled up.")
 end
