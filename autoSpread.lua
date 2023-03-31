@@ -188,7 +188,7 @@ local function spreadOnce()
             checkChildren(slot, crop);
         end
 
-        if #database.getStorage() >= 81 then
+        if #database.getStorage() >= config.storageFarmArea then
             return true;
         end
 
