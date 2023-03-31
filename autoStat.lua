@@ -98,7 +98,7 @@ end
 local function breedOnce()
     -- return true if all stats are maxed out
     -- 52 = 21(max gr) + 31(max ga) - 0 (min re)
-    if not nonstop and lowestStat == 50 then
+    if not nonstop and lowestStat == 52 then
         return true
     end
 
