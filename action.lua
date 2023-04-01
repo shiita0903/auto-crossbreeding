@@ -115,15 +115,15 @@ local function restockAll()
 end
 
 local function spargeWeedEx()
-    if robot.count(robot.inventorySize() + config.weedExSlot) == 0 then
-        restockWeedEx(true)
-    end
     local selectedSlot = robot.select()
     robot.select(robot.inventorySize() + config.weedExSlot)
     inventory_controller.equip()
     robot.useDown()
     inventory_controller.equip()
     robot.select(selectedSlot)
+    if robot.count(robot.inventorySize() + config.weedExSlot) == 0 then
+        restockWeedEx(true)
+    end
 end
 
 local function placeCropStick(count, shouldSpargeWeedEx)
