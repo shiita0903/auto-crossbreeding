@@ -131,6 +131,10 @@ local function isWeed(crop)
         (crop.name == "venomilia" and crop.gr > 7);
 end
 
+local function calculateStats(crop)
+    return crop.gr + crop.ga - crop.re;
+end
+
 local function checkChildren(slot, crop)
     if crop.name == "air" then
         action.placeCropStick(2);
@@ -171,10 +175,6 @@ local function checkChildren(slot, crop)
 
     action.deweed();
     action.placeCropStick();
-end
-
-function calculateStats(crop)
-    return crop.gr + crop.ga - crop.re;
 end
 
 local function spreadOnce()
