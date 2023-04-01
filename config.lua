@@ -37,6 +37,8 @@ local config = {
     maxBreedRound = nil,
     -- The min stats requirement for target crop to be put into storage farm.
     autoSpreadTargetCropStatsThreshold = 51, -- 51 = 20(max gr) + 31(max ga) - 0 (min re)
+    -- The max grows of children stats. 20 is for creation of base plant, 23 is for mass production.
+    autoSpreadMaxGrows = 20,
     -- flags
 
     -- if you turn on this flag, the robot will try to take care of the item drops
