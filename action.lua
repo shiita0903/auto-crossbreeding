@@ -62,6 +62,25 @@ local function restockStick(resume)
     robot.select(selectedSlot)
 end
 
+local function restockWeedEx(resume)
+    local selectedSlot = robot.select()
+    if resume ~= false then
+        gps.save()
+    end
+    gps.go(config.weedExContainerPos)
+    robot.select(robot.inventorySize() + config.weedExSlot)
+    for i = 1, inventory_controller.getInventorySize(sides.down) do
+        inventory_controller.suckFromSlot(sides.down, i, 1)
+        if robot.count() == 1 then
+            break
+        end
+    end
+    if resume ~= false then
+        gps.resume()
+    end
+    robot.select(selectedSlot)
+end
+
 local function dumpInventory(resume)
     local selectedSlot = robot.select()
     if resume ~= false then
@@ -95,6 +114,18 @@ local function restockAll()
     gps.resume()
 end
 
+local function spargeWeedEx()
+    if robot.count(robot.inventorySize() + config.weedExSlot) == 0 then
+        restockWeedEx(true)
+    end
+    local selectedSlot = robot.select()
+    robot.select(robot.inventorySize() + config.weedExSlot)
+    inventory_controller.equip()
+    robot.useDown()
+    inventory_controller.equip()
+    robot.select(selectedSlot)
+end
+
 local function placeCropStick(count)
     if count == nil then
         count = 1
@@ -109,6 +140,7 @@ local function placeCropStick(count)
         robot.useDown()
     end
     inventory_controller.equip()
+    spargeWeedEx()
     robot.select(selectedSlot)
 end
 

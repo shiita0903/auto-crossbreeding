@@ -13,6 +13,8 @@ local config = {
     chargerPos = { 0, 0 },
     -- the coordinate for the container contains crop sticks
     stickContainerPos = { 0, 3 },
+    -- the coordinate for the container contains Weed-Ex
+    weedExContainerPos = { 0, 4 },
     -- the coordinate for the container to store seeds, products, etc
     -- has no effect unless you turn on "takeCareOfDrops" flag.
     storagePos = { 0, 2 },
@@ -26,8 +28,10 @@ local config = {
     binderSlot = -1,
     -- the slot for crop sticks
     stickSlot = -2,
+    -- the slot for Weed-Ex
+    weedExSlot = -3,
     -- to which slot should the robot stop storing items
-    storageStopSlot = -3,
+    storageStopSlot = -4,
     -- Max breed round before termination. Used on server to avoid left-alone robot endlessly
     -- consuming resources. Set to nil for infinite loop.
     maxBreedRound = nil,
