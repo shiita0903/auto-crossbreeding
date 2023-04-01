@@ -127,7 +127,7 @@ local targetCropQueue;
 local function isWeed(crop)
     return crop.name == "weed" or
         crop.name == "Grass" or
-        crop.gr > 21 or
+        crop.gr > 20 or
         (crop.name == "venomilia" and crop.gr > 7);
 end
 

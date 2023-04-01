@@ -49,7 +49,7 @@ end
 local function isWeed(crop)
     return crop.name == "weed" or
         crop.name == "Grass" or
-        crop.gr > 21 or
+        crop.gr > 20 or
         (crop.name == "venomilia" and crop.gr > 7);
 end
 
@@ -94,8 +94,8 @@ end
 
 local function breedOnce()
     -- return true if all stats are maxed out
-    -- 52 = 21(max gr) + 31(max ga) - 0 (min re)
-    if not nonstop and lowestStat == 52 then
+    -- 51 = 20(max gr) + 31(max ga) - 0 (min re)
+    if not nonstop and lowestStat == 51 then
         return true
     end
 
@@ -141,7 +141,7 @@ local function main()
         action.dumpInventory()
     end
     gps.turnTo(1)
-    print("Done.\nAll crops are now 21/31/0")
+    print("Done.\nAll crops are now 20/31/0")
 end
 
 main()
