@@ -88,7 +88,7 @@ end
 local function restockAll()
     gps.save()
     if config.takeCareOfDrops then
-        dumpInventory()
+        dumpInventory(false)
     end
     restockStick(false)
     charge(false)
