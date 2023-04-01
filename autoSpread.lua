@@ -137,12 +137,12 @@ end
 
 local function checkChildren(slot, crop)
     if crop.name == "air" then
-        action.placeCropStick(2);
+        action.placeCropStick(2, true);
         return;
     end
 
     if (not config.assumeNoBareStick) and crop.name == "crop" then
-        action.placeCropStick();
+        action.placeCropStick(1, true);
         return;
     end
 
@@ -152,7 +152,7 @@ local function checkChildren(slot, crop)
 
     if isWeed(crop) then
         action.deweed();
-        action.placeCropStick();
+        action.placeCropStick(1, true);
         return;
     end
 
@@ -168,13 +168,13 @@ local function checkChildren(slot, crop)
         if stat >= config.autoSpreadTargetCropStatsThreshold then
             action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()));
             database.addToStorage(crop);
-            action.placeCropStick(2);
+            action.placeCropStick(2, true);
             return;
         end
     end
 
     action.deweed();
-    action.placeCropStick();
+    action.placeCropStick(1, true);
 end
 
 local function spreadOnce()

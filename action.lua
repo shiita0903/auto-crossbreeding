@@ -126,7 +126,7 @@ local function spargeWeedEx()
     robot.select(selectedSlot)
 end
 
-local function placeCropStick(count)
+local function placeCropStick(count, shouldSpargeWeedEx)
     if count == nil then
         count = 1
     end
@@ -140,7 +140,9 @@ local function placeCropStick(count)
         robot.useDown()
     end
     inventory_controller.equip()
-    spargeWeedEx()
+    if shouldSpargeWeedEx then
+        spargeWeedEx()
+    end
     robot.select(selectedSlot)
 end
 

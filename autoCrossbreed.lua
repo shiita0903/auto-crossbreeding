@@ -77,28 +77,28 @@ end
 
 local function checkOffspring(slot, crop)
     if crop.name == "air" then
-        action.placeCropStick(2)
+        action.placeCropStick(2, true)
     elseif (not config.assumeNoBareStick) and crop.name == "crop" then
-        action.placeCropStick()
+        action.placeCropStick(1, true)
     elseif crop.isCrop then
         if isWeed(crop) then
             action.deweed()
-            action.placeCropStick()
+            action.placeCropStick(1, true)
         else
             if database.existInStorage(crop) then
                 local suitableSlot = findSuitableFarmSlot(crop)
                 if suitableSlot == 0 then
                     action.deweed()
-                    action.placeCropStick()
+                    action.placeCropStick(1, true)
                 else
                     action.transplant(posUtil.farmToGlobal(slot), posUtil.farmToGlobal(suitableSlot))
-                    action.placeCropStick(2)
+                    action.placeCropStick(2, true)
                     database.updateFarm(suitableSlot, crop)
                     updateLowest()
                 end
             else
                 action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()))
-                action.placeCropStick(2)
+                action.placeCropStick(2, true)
                 database.addToStorage(crop)
             end
         end
