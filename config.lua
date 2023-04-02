@@ -19,9 +19,9 @@ local config = {
     -- has no effect unless you turn on "takeCareOfDrops" flag.
     storagePos = { 0, 2 },
     -- the coordinate for the transvector dislocator
-    dislocatorPos = { 0, 5 },
+    dislocatorPos = { 0, 10 },
     -- the coordinate for the farmland that the dislocaotr is facing
-    relayFarmlandPos = { 0, 6 },
+    relayFarmlandPos = { 1, 10 },
     -- the slot for spade, count from 0, count from bottom-right to top-left
     spadeSlot = 0,
     -- the slot for binder for the transvector dislocator
