@@ -3,7 +3,7 @@ local config = {
 
     -- the side length of the crossbreeding farm
     -- maximum value is 9.
-    farmSize = 6,
+    farmSize = 9,
     -- the side length of the new crop storage farm
     -- the recommend value is 13 because it's just enough to hold all the crops in GTNH
     storageFarmSize = 15,
