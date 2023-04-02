@@ -22,16 +22,11 @@ local function updateLowest()
     -- Find lowestest tier slot.
     for slot = 1, config.farmArea, 2 do
         local crop = farm[slot]
-        if crop == nil then
-            lowestTierSlot = slot;
-            lowestStatSlot = slot;
-            hasEmptySlot = true;
-            break;
-        end
-
-        if crop.tier < lowestTier then
-            lowestTier = crop.tier
-            lowestTierSlot = slot
+        if crop ~= nil then
+            if crop.tier < lowestTier then
+                lowestTier = crop.tier
+                lowestTierSlot = slot
+            end
         end
     end
 
