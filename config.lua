@@ -19,9 +19,9 @@ local config = {
     -- has no effect unless you turn on "takeCareOfDrops" flag.
     storagePos = { 0, 2 },
     -- the coordinate for the transvector dislocator
-    dislocatorPos = { 0, 10 },
+    dislocatorPos = { 5, 9 },
     -- the coordinate for the farmland that the dislocaotr is facing
-    relayFarmlandPos = { 1, 10 },
+    relayFarmlandPos = { 5, 10 },
     -- the slot for spade, count from 0, count from bottom-right to top-left
     spadeSlot = 0,
     -- the slot for binder for the transvector dislocator
@@ -36,7 +36,7 @@ local config = {
     -- consuming resources. Set to nil for infinite loop.
     maxBreedRound = nil,
     -- The min stats requirement for target crop to be put into storage farm.
-    autoSpreadTargetCropStatsThreshold = 51, -- 51 = 20(max gr) + 31(max ga) - 0 (min re)
+    autoSpreadTargetCropStatsThreshold = 51 - 2, -- 51 = 20(max gr) + 31(max ga) - 0 (min re)
     -- The max grows of children stats. 20 is for creation of base plant, 23 is for mass production.
     autoSpreadMaxGrows = 20,
     -- flags
@@ -48,7 +48,7 @@ local config = {
     takeCareOfDrops = true,
     -- if you turn on this flag, you need to prepare a storage farm
     -- the recommend size is 13, which you change above.
-    keepNewCropWhileMinMaxing = false,
+    keepNewCropWhileMinMaxing = true,
     -- assume there is no bare stick in the farm, should increace speed.
     assumeNoBareStick = true,
 }
