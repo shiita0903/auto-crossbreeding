@@ -12,12 +12,16 @@ local function scan()
         elseif rawResult["crop:name"] == "weed" then
             return { isCrop = true, name = "weed" }
         else
+            local gr = rawResult["crop:growth"]
+            local ga = rawResult["crop:gain"]
+            local re = rawResult["crop:resistance"]
             return {
                 isCrop = true,
                 name = rawResult["crop:name"],
-                gr = rawResult["crop:growth"],
-                ga = rawResult["crop:gain"],
-                re = rawResult["crop:resistance"],
+                gr = gr,
+                ga = ga,
+                re = re,
+                stats = gr + ga - re,
                 tier = rawResult["crop:tier"]
             }
         end

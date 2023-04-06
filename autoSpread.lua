@@ -131,10 +131,6 @@ local function isWeed(crop)
         (crop.name == "venomilia" and crop.gr > 7);
 end
 
-local function calculateStats(crop)
-    return crop.gr + crop.ga - crop.re;
-end
-
 local function checkChildren(slot, crop)
     if crop.name == "air" then
         action.placeCropStick(2, true);
@@ -157,15 +153,14 @@ local function checkChildren(slot, crop)
     end
 
     if crop.name == targetCrop then
-        local stat = calculateStats(crop);
         -- Populate breeding cells with high stats crop as priority.
         if targetCropQueue.lowestStat < config.autoSpreadTargetCropStatsThreshold then
-            if targetCropQueue.replaceLowest(slot, stat) then
+            if targetCropQueue.replaceLowest(slot, crop.stats) then
                 return;
             end
         end
 
-        if stat >= config.autoSpreadTargetCropStatsThreshold then
+        if crop.stats >= config.autoSpreadTargetCropStatsThreshold then
             action.transplant(posUtil.farmToGlobal(slot), posUtil.storageToGlobal(database.nextStorageSlot()));
             database.addToStorage(crop);
             action.placeCropStick(2, true);
@@ -225,7 +220,7 @@ local function init()
 
         gps.go(pos);
         local crop = scanner.scan();
-        stats[slot] = calculateStats(crop);
+        stats[slot] = crop.stats;
 
         if i == 1 then
             targetCrop = crop.name;

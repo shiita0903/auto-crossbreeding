@@ -39,8 +39,7 @@ local function updateLowest()
         local crop = farm[slot]
         if crop ~= nil then
             if crop.tier == lowestTier then
-                local stat = crop.gr + crop.ga - crop.re
-                if stat < lowestStat then
+                if crop.stats < lowestStat then
                     lowestStat = stat
                     lowestStatSlot = slot
                 end
@@ -56,7 +55,7 @@ local function findSuitableFarmSlot(crop)
     if crop.tier > lowestTier then
         return lowestTierSlot
     elseif crop.tier == lowestTier then
-        if crop.gr + crop.ga - crop.re > lowestStat then
+        if crop.stats > lowestStat then
             return lowestStatSlot
         end
     end

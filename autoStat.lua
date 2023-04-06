@@ -28,8 +28,7 @@ local function updateLowest()
                 lowestStatSlot = slot
                 break;
             else
-                local stat = crop.gr + crop.ga - crop.re
-                if stat < lowestStat then
+                if crop.stats < lowestStat then
                     lowestStat = stat
                     lowestStatSlot = slot
                 end
@@ -39,7 +38,7 @@ local function updateLowest()
 end
 
 local function findSuitableFarmSlot(crop)
-    if crop.gr + crop.ga - crop.re > lowestStat then
+    if crop.stats > lowestStat then
         return lowestStatSlot
     else
         return 0
